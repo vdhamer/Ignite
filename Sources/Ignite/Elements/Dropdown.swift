@@ -30,7 +30,7 @@ public struct Dropdown: BlockElement, NavigationItem {
     /// How large this dropdown should be drawn. Defaults to `.medium`.
     var size = ButtonSize.medium
 
-    /// How this dropdown should be styled on the screen. Defaults to `.defaut`.
+    /// How this dropdown should be styled on the screen. Defaults to `.default`.
     var role = Role.default
 
     /// Controls whether this dropdown needs to be created as its own element,
