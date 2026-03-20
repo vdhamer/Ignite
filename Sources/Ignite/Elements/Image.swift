@@ -94,11 +94,50 @@ public struct Image: BlockElement, InlineElement, LazyLoadable {
     ///   - context: The active publishing context.
     /// - Returns: The HTML for this element.
     private func render(image: String, description: String, into context: PublishingContext) -> String {
-        """
-            <img src=\"\(context.site.url.path)\(image)\" \
-            \(attributes.description)\
-            alt=\"\(description)\"/>
-            """
+        if isRemote(image: image) { // updated to fix https://github.com/vdhamer/Photo-Club-Hub-HTML/issues/170
+            return
+                """
+                <img src=\"\(image)\" \
+                \(attributes.description)\
+                alt=\"\(description)\"/>
+                """
+        } else {
+            return
+                """
+                <img src=\"\(context.site.url.path)\(image)\" \
+                \(attributes.description)\
+                alt=\"\(description)\"/>
+                """
+        }
+    }
+    
+    // This function is NOT needed for Ignite 0.6 because remote is passed as a parameter nowadays.
+    // This code is to fix a problem in Ignite 0.4 dealing with local/remote files. PvdH
+    private func isRemote(image: String) -> Bool { // function made using GPT 5.0
+        // Trim whitespace to reduce accidental misclassification
+        let trimmed = image.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Common remote schemes or protocol-relative URLs
+        if trimmed.hasPrefix("//") { return true }
+
+        if let url = URL(string: trimmed), let scheme = url.scheme?.lowercased() {
+            switch scheme {
+            case "http", "https":
+                return true
+            case "data", "blob":
+                // These are not remote network requests, but they are not site-local file paths either.
+                return true
+            case "file":
+                // Explicitly local file URL
+                return false
+            default:
+                // Unknown scheme – assume remote to avoid incorrectly prefixing with site URL.
+                return true
+            }
+        }
+
+        // At this point it's not a valid URL with a scheme. Treat absolute root paths as local.
+        return !trimmed.hasPrefix("/")
     }
 
     /// Renders this element using publishing context passed in.
