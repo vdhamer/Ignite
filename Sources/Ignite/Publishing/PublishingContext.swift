@@ -174,6 +174,8 @@ public class PublishingContext {
                     to: buildDirectory.appending(path: asset.lastPathComponent)
                 )
             }
+        } catch let error as NSError where error.code == NSFileReadNoSuchFileError {
+            // No Assets directory — acceptable for apps without custom static assets
         } catch {
             print("Could not copy assets from \(assetsDirectory) to \(buildDirectory): \(error).")
             throw error
