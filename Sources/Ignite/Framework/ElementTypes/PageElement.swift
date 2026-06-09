@@ -33,7 +33,7 @@ extension PageElement {
         var copy = self
 
         // Refuse to add class names more than once.
-        for case let newClass? in newClasses where copy.attributes.classes.contains(newClass) == false {
+        for newClass in newClasses where copy.attributes.classes.contains(newClass) == false { // Xcode27 detected a bug
             // Empty class names are to be ignored.
             if newClass.isEmpty { continue }
             copy.attributes.classes.append(newClass)
