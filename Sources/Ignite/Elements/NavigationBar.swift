@@ -178,7 +178,7 @@ public struct NavigationBar: BlockElement {
         ListItem {
             dropdownItem.configuredAsNavigationItem()
         }
-        .class("nav-item", "dropdown")
+        .class("nav-item", "dropdown", dropdownItem.isDropup ? "dropup" : nil)
         .data("bs-theme", "light")
     }
 

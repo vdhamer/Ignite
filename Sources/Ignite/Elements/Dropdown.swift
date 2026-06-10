@@ -33,6 +33,9 @@ public struct Dropdown: BlockElement, NavigationItem {
     /// How this dropdown should be styled on the screen. Defaults to `.default`.
     var role = Role.default
 
+    /// When true the menu opens upward instead of downward. Use for dropdowns placed in a bottom navbar.
+    var isDropup = false
+
     /// Controls whether this dropdown needs to be created as its own element,
     /// or whether it uses the structure provided by a parent `NavigationBar`.
     private var isNavigationItem = false
@@ -56,6 +59,14 @@ public struct Dropdown: BlockElement, NavigationItem {
     public func dropdownSize(_ size: ButtonSize) -> Self {
         var copy = self
         copy.size = size
+        return copy
+    }
+
+    /// Makes the dropdown menu open upward. Use when the dropdown sits in a bottom-anchored navbar.
+    /// - Returns: A new `Dropdown` instance that opens upward.
+    public func dropup() -> Self {
+        var copy = self
+        copy.isDropup = true
         return copy
     }
 
