@@ -27,9 +27,17 @@ struct SiteMapGenerator {
             .replacingOccurrences(of: ">", with: "&gt;")
     }
 
+    /// Every page is written as `<path>/index.html`, and the web server answers the slashless form of that
+    /// URL with a 301 to the slashed one. A sitemap (and a `rel="canonical"`) naming the redirecting form
+    /// makes Search Console report "Page with redirect" and ignore the canonical. FORK CHANGE.
+    private func directoryURL(for path: String) -> String {
+        let url = context.site.url.absoluteString + path
+        return url.hasSuffix("/") ? url : url + "/"
+    }
+
     func generateSiteMap() -> String {
         let locations = context.siteMap.map {
-            let location = xmlEscaped(context.site.url.absoluteString + $0.path)
+            let location = xmlEscaped(directoryURL(for: $0.path))
             return "<url><loc>\(location)</loc><priority>\($0.priority)</priority></url>"
         }.joined()
 

@@ -255,7 +255,7 @@ public class PublishingContext {
         let page = Page(
             title: staticPage.title,
             description: staticPage.description,
-            url: site.url.appending(path: path),
+            url: site.url.appending(path: path, directoryHint: .isDirectory),
             image: staticPage.image,
             body: body
         )
@@ -286,7 +286,7 @@ public class PublishingContext {
         let page = Page(
             title: content.title,
             description: content.description,
-            url: site.url.appending(path: content.path),
+            url: site.url.appending(path: content.path, directoryHint: .isDirectory),
             image: image,
             body: body
         )

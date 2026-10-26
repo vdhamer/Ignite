@@ -47,4 +47,16 @@ final class SiteMapGeneratorTests: ElementTest {
         XCTAssertTrue(xml.contains("/expertises/Black%20and%20white"),
                       "Percent-encoded characters must pass through untouched")
     }
+
+    /// A page is written to `<path>/index.html`, so the server redirects the slashless URL to the slashed one.
+    /// A sitemap entry must name the final URL, or Search Console reports "Page with redirect".
+    func testPageEntriesEndInSlash() throws {
+        publishingContext.addToSiteMap("/en/clubs/fgWaalre", priority: 0.9)
+        publishingContext.addToSiteMap("/en/clubs/", priority: 0.9)
+
+        let xml = SiteMapGenerator(context: publishingContext).generateSiteMap()
+
+        XCTAssertTrue(xml.contains("/en/clubs/fgWaalre/</loc>"), "A slashless path must gain its slash")
+        XCTAssertFalse(xml.contains("/en/clubs//</loc>"), "A path that already ends in a slash must not gain a second one")
+    }
 }
